@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finance Tracker with Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      width: 100%;
+      font-size: 16px;
+    }
+    .result {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Finance Tracker</h1>
+
+  <div id="login-section">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Enter your email">
+    <input type="password" id="password" placeholder="Enter your password">
+    <button onclick="login()">Login</button>
+    <p>Or <a href="#" onclick="showSignup()">Sign up</a></p>
+  </div>
+
+  <div id="signup-section" style="display:none;">
+    <h2>Sign Up</h2>
+    <input type="email" id="signup-email" placeholder="Enter your email">
+    <input type="password" id="signup-password" placeholder="Enter your password">
+    <button onclick="signup()">Sign Up</button>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+  </div>
+
+  <div id="tracker-section" style="display:none;">
+    <h2>Welcome, <span id="user-email"></span></h2>
+    
+    <label for="income">Enter Income:</label>
+    <input type="number" id="income" placeholder="Enter income here">
+
+    <label for="expense">Enter Expense:</label>
+    <input type="number" id="expense" placeholder="Enter expense here">
+
+    <button onclick="addTransaction()">Add Transaction</button>
+
+    <div class="result" id="result"></div>
+
+    <h3>Transaction History</h3>
+    <ul id="transaction-list"></ul>
+    
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+  <script>
+    // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCGUychxE2ePswdzr4h4WNhmsITmOyShJA",
+    authDomain: "cointracker-d820e.firebaseapp.com",
+    projectId: "cointracker-d820e",
+    storageBucket: "cointracker-d820e.appspot.com",
+    messagingSenderId: "1019939475675",
+    appId: "1:1019939475675:web:d57bd0c63962693c99bcfe",
+    measurementId: "G-QHDKVTCFGG"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+    var db = firebase.firestore();
+
+    // Authentication Functions
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        showTracker();
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+    }
+
+    function signup() {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        showTracker();
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+    }
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        location.reload();
+      });
+    }
+
+    function showLogin() {
+      document.getElementById('login-section').style.display = 'block';
+      document.getElementById('signup-section').style.display = 'none';
+    }
+
+    function showSignup() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('signup-section').style.display = 'block';
+    }
+
+    function showTracker() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('signup-section').style.display = 'none';
+      document.getElementById('tracker-section').style.display = 'block';
+      
+      const user = firebase.auth().currentUser;
+      if (user) {
+        document.getElementById('user-email').textContent = user.email;
+        loadTransactions();
+      }
+    }
+
+    // Load and display transactions
+    function loadTransactions() {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        db.collection("transactions").where("userId", "==", user.uid).get()
+        .then((querySnapshot) => {
+          const list = document.getElementById('transaction-list');
+          list.innerHTML = ''; // Clear previous transactions
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const li = document.createElement('li');
+            li.textContent = `${data.type}: $${data.amount}`;
+            list.appendChild(li);
+          });
+        });
+      }
+    }
+
+    // Add a new transaction
+    function addTransaction() {
+      const income = parseFloat(document.getElementById('income').value) || 0;
+      const expense = parseFloat(document.getElementById('expense').value) || 0;
+      const user = firebase.auth().currentUser;
+
+      if (user) {
+        db.collection("transactions").add({
+          userId: user.uid,
+          type: income > 0 ? 'Income' : 'Expense',
+          amount: income > 0 ? income : expense
+        }).then(() => {
+          loadTransactions();
+          document.getElementById('income').value = '';
+          document.getElementById('expense').value = '';
+        });
+      }
+    }
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        showTracker();
+      } else {
+        showLogin();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "7th-period-isp-personal-finance-tracker"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "7th-period-isp-personal-finance-tracker-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
