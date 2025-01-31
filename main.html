@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Finance Tracker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -241,6 +242,7 @@
         </div>
     </div>
 
+
     <!-- Signup Page -->
     <div class="container" id="signup-page" style="display: none;">
         <h1>Sign Up</h1>
@@ -276,7 +278,31 @@
             <canvas id="budget-chart"></canvas>
             <div class="chart-key" id="chart-key"></div>
         </div>
+        <h2>Savings Goals</h2>
+        <div id="goals-container"></div>
+        <button onclick="showModal('goal-modal')">Add Savings Goal</button>
     </main>
+    
+    <div id="goal-modal" class="modal">
+        <div class="modal-content">
+            <h2>Add Savings Goal</h2>
+            <label for="goal-name">Goal Name*</label>
+            <input type="text" id="goal-name" placeholder="Enter goal name">
+            <label for="goal-amount">Target Amount*</label>
+            <input type="number" id="goal-amount" placeholder="Enter target amount">
+            <button onclick="addGoal()">Submit</button>
+            <button class="close-btn" onclick="closeModal('goal-modal')">Cancel</button>
+        </div>
+    </div>
+    
+    <div id="congrats-modal" class="modal">
+        <div class="modal-content">
+            <h2>Congratulations!</h2>
+            <p>You have successfully completed your savings goal!</p>
+            <button class="close-btn" onclick="closeModal('congrats-modal')">Close</button>
+        </div>
+    </div>
+
 
     <!-- Navigation -->
     <nav>
@@ -352,23 +378,105 @@
     </div>
 
     <script>
-        let users = [
-            { username: 'Tester', password: '1234' }
-        ];
-        let loggedIn = false;
-        
+        let savingsGoals = [];
+
+        function addGoal() {
+            const goalName = document.getElementById("goal-name").value;
+            const targetAmount = parseFloat(document.getElementById("goal-amount").value);
+    
+            if (goalName && targetAmount > 0) {
+                const newGoal = {
+                    name: goalName,
+                    target: targetAmount,
+                    saved: 0
+                };
+                savingsGoals.push(newGoal);
+                updateGoalsUI();
+                closeModal("goal-modal");
+            } else {
+                alert("Please provide a valid goal name and target amount.");
+            }
+        }
+    
+        function contributeToGoal(goalIndex, amount) {
+            if (totalBalance >= amount && amount > 0) {
+                savingsGoals[goalIndex].saved += amount;
+                totalBalance -= amount;
+                updateBalance();
+    
+                if (savingsGoals[goalIndex].saved >= savingsGoals[goalIndex].target) {
+                    showModal("congrats-modal");
+                    clearGoal(goalIndex);
+                } else {
+                    updateGoalsUI();
+                }
+            } else {
+                alert("Insufficient funds or invalid amount.");
+            }
+        }
+    
+        function clearGoal(goalIndex) {
+            savingsGoals.splice(goalIndex, 1); // Remove the goal from the array
+            updateGoalsUI(); // Refresh the UI
+        }
+    
+        function updateGoalsUI() {
+            const goalsContainer = document.getElementById("goals-container");
+            goalsContainer.innerHTML = "";
+    
+            savingsGoals.forEach((goal, index) => {
+                const progressPercentage = Math.min(
+                    (goal.saved / goal.target) * 100,
+                    100
+                ).toFixed(2);
+    
+                goalsContainer.innerHTML += `
+                    <div class="goal">
+                        <h3>${goal.name}</h3>
+                        <p>Target: $${goal.target.toFixed(2)}</p>
+                        <p>Saved: $${goal.saved.toFixed(2)}</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        <button onclick="promptContribution(${index})">Contribute</button>
+                        <button onclick="clearGoal(${index})" style="margin-top: 5px;">Clear Goal</button>
+                    </div>
+                `;
+            });
+        }
+    
+        function promptContribution(goalIndex) {
+            const contribution = parseFloat(
+                prompt(`Enter contribution amount for "${savingsGoals[goalIndex].name}":`)
+            );
+            if (!isNaN(contribution)) {
+                contributeToGoal(goalIndex, contribution);
+            }
+        }
+    
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+    
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+    //Password
+        let users = {}; // Store hashed passwords
+
+        function hashPassword(password) {
+            return CryptoJS.SHA256(password).toString();
+        }
 
         function login() {
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
+            const hashedPassword = hashPassword(password);
 
-            const user = users.find(user => user.username === username && user.password === password);
-            
-            if (user) {
-                loggedIn = true;
+            if (users[username] === hashedPassword) {
                 alert('Login successful!');
                 document.getElementById('login-page').style.display = 'none';
-                navigate('home-page');
+                document.getElementById('home-page').style.display = 'block';
             } else {
                 alert('Invalid username or password.');
             }
@@ -377,17 +485,14 @@
         function signup() {
             const username = document.getElementById('signup-username').value;
             const password = document.getElementById('signup-password').value;
+            const hashedPassword = hashPassword(password);
 
-            if (username && password) {
-                if (users.some(user => user.username === username)) {
-                    alert('Username already exists.');
-                } else {
-                    users.push({ username, password });
-                    alert('Signup successful! Please login.');
-                    showLoginPage();
-                }
+            if (users[username]) {
+                alert('Username already exists.');
             } else {
-                alert('Please fill out all fields.');
+                users[username] = hashedPassword;
+                alert('Signup successful! Please login.');
+                showLoginPage();
             }
         }
 
@@ -400,7 +505,6 @@
             document.getElementById('signup-page').style.display = 'none';
             document.getElementById('login-page').style.display = 'block';
         }
-        
         let totalBalance = 0;
         let transactionHistory = [];
         let spendingByCategory = {
