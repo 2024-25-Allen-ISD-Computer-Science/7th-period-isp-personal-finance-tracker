@@ -318,6 +318,19 @@
       <h2>Total Balance: $<span id="total-balance">0.00</span></h2>
 
   </main>
+  <!--Settings-->
+  <main id="settings-page" style="display: none;">
+    <h1>Settings</h1>
+    <div class="container">
+        <h2>Change Username</h2>
+        <input type="text" id="new-username" placeholder="Enter new username">
+        <button onclick="changeUsername()">Save Username</button>
+    </div>
+    <div class="container">
+        <h2>Change Password</h2>
+        <input type="password" id="new-password" placeholder="Enter new password">
+        <button onclick="changePassword()">Save Password</button>
+    </div>
 
   <!-- Transactions Page -->
   <main id="transactions-page">
@@ -348,6 +361,10 @@
           <i>💰</i>
           Budget
       </a>
+      <a href="#" onclick="navigate('settings-page')">
+        <i>⚙️</i>
+        Settings
+    </a>
   </nav>
 
   <!-- Modals -->
@@ -408,6 +425,33 @@
   </div>
 
   <script>
+    //Setings
+    function changeUsername() {
+            const newUsername = document.getElementById("new-username").value;
+            if (newUsername) {
+                alert("Username changed successfully!");
+            } else {
+                alert("Please enter a valid username.");
+            }
+        }
+
+        function changePassword() {
+            const newPassword = document.getElementById("new-password").value;
+            if (newPassword) {
+                alert("Password changed successfully!");
+            } else {
+                alert("Please enter a valid password.");
+            }
+        }
+
+        function navigate(pageId) {
+            document.querySelectorAll('main').forEach(page => {
+                page.classList.remove('active');
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
+            document.getElementById(pageId).classList.add('active');
+        }
       let users = [
           { username: 'Tester', password: '1234' }
       ];
