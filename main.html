@@ -1,702 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Finance Tracker</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1c1c1c;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: none; /* All pages are hidden by default */
-        }
-
-        main.active {
-            display: block; /* Only the active page is displayed */
-        }
-
-        nav {
-            background-color: #333;
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-around;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            border-top: 1px solid #444;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 14px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        nav a:hover {
-            color: #50fa7b;
-        }
-
-        nav a i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        h1, h2, h3 {
-            text-align: center;
-            color: #ffffff;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #333;
-            color: #fff;
-            margin: 10px 0;
-            display: block;
-            width: 100%;
-            text-align: center;
-            max-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        button:hover {
-            background-color: #444;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
-        }
-
-        #total-balance {
-            color: #50fa7b;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        #transaction-history {
-            border: 1px solid #333;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
-            background-color: #2b2b2b;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .transaction {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
-        }
-
-        .transaction span {
-            font-weight: bold;
-            color: #ff5555;
-        }
-
-        /* Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: #333;
-            color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-content h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-content button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #555;
-            color: #fff;
-            display: block;
-            margin: 10px auto 0 auto;
-        }
-
-        .modal-content button:hover {
-            background-color: #777;
-        }
-
-        .modal-content .close-btn {
-            background-color: #ff5555;
-        }
-
-        .modal-content .close-btn:hover {
-            background-color: #ff7777;
-        }
-
-        /* Budget Chart */
-        #budget-chart-container {
-            max-width: 600px;
-            margin: 20px auto;
-        }
-
-        .chart-key {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .chart-key span {
-            display: inline-block;
-            margin: 0 10px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #ffffff;
-        }
-
-        /* Login and Signup Styles */
-        .container {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 10px;
-            color: #50fa7b;
-        }
-
-        .link a {
-            text-decoration: none;
-            color: #50fa7b;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
-
-        #login-page, #signup-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #1c1c1c;
-        }
-
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance Tracker Prototype</title>
+  <style>
+    /* Base Reset and Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      padding: 20px;
+    }
+    /* HEADER */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2a2d3e;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 8px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+    nav ul li {
+      margin: 0 15px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .profile {
+      font-weight: bold;
+    }
+    /* MAIN CONTENT */
+    main {
+      margin-top: 20px;
+    }
+    /* SUMMARY CARDS */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .card h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    /* CHARTS */
+    .charts {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .chart-placeholder {
+      background: white;
+      flex: 1;
+      padding: 40px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* TRANSACTIONS TABLE */
+    .transactions {
+      margin-top: 20px;
+    }
+    .transactions h2 {
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    table th {
+      background-color: #2a2d3e;
+      color: white;
+    }
+    table tr:hover {
+      background-color: #f1f1f1;
+    }
+    /* PAGE VISIBILITY */
+    .page {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    /* FORM STYLES FOR LOGIN/SIGNUP */
+    .form-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      margin: 50px auto;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2a2d3e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .form-container p {
+      text-align: center;
+    }
+    .form-container a {
+      color: #2a2d3e;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-
-    <!-- Login Page -->
-    <div class="container" id="login-page">
-        <h1>Login</h1>
-        <input type="text" id="login-username" placeholder="Username">
-        <input type="password" id="login-password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <div class="link">
-            <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
-        </div>
+  <!-- Login Page -->
+  <div id="login-page" class="page active">
+    <div class="form-container">
+      <h2>Login</h2>
+      <input type="text" id="login-username" placeholder="Username" />
+      <input type="password" id="login-password" placeholder="Password" />
+      <button id="login-btn">Log In</button>
+      <p>Don't have an account? <a id="go-to-signup">Sign Up</a></p>
     </div>
+  </div>
 
-
-    <!-- Signup Page -->
-    <div class="container" id="signup-page" style="display: none;">
-        <h1>Sign Up</h1>
-        <input type="text" id="signup-username" placeholder="Choose a Username">
-        <input type="password" id="signup-password" placeholder="Choose a Password">
-        <button onclick="signup()">Sign Up</button>
-        <div class="link">
-            <p>Already have an account? <a href="#" onclick="showLoginPage()">Login</a></p>
-        </div>
+  <!-- Sign Up Page -->
+  <div id="signup-page" class="page">
+    <div class="form-container">
+      <h2>Sign Up</h2>
+      <input type="text" id="signup-username" placeholder="Username" />
+      <input type="password" id="signup-password" placeholder="Password" />
+      <button id="signup-btn">Sign Up</button>
+      <p>Already have an account? <a id="go-to-login">Log In</a></p>
     </div>
+  </div>
 
-    <!-- Home Page -->
-    <main id="home-page">
-        <h1>Personal Finance Tracker</h1>
-        <button onclick="showModal('existing-money-modal')">Add Existing Money</button>
-        <button onclick="showModal('monthly-income-modal')">Set Monthly Income</button>
-        <button onclick="showModal('random-expense-modal')">Add Random Expense</button>
-        <button onclick="showModal('expense-modal')">Add Categorized Expense</button>
-        <h2>Total Balance: $<span id="total-balance">0.00</span></h2>
-
+  <!-- Dashboard Page (Your Original Page) -->
+  <div id="dashboard-page" class="page">
+    <header>
+      <h1>Finance Tracker</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <section class="summary">
+        <div class="card">
+          <h3>Total Balance</h3>
+          <p>$12,500</p>
+        </div>
+        <div class="card">
+          <h3>Income This Month</h3>
+          <p>+ $3,200</p>
+        </div>
+        <div class="card">
+          <h3>Expenses This Month</h3>
+          <p>- $1,750</p>
+        </div>
+        <div class="card">
+          <h3>Budget Utilization</h3>
+          <p>65%</p>
+        </div>
+      </section>
+      <section class="charts">
+        <div class="chart-placeholder">📊 Spending Trends</div>
+        <div class="chart-placeholder">📊 Income vs Expenses</div>
+      </section>
+      <section class="transactions">
+        <h2>Recent Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>02/25/25</td>
+              <td>Grocery Shopping</td>
+              <td>Food</td>
+              <td>- $120</td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>02/24/25</td>
+              <td>Salary</td>
+              <td>Income</td>
+              <td>+ $3,500</td>
+              <td>Received</td>
+            </tr>
+            <tr>
+              <td>02/22/25</td>
+              <td>Gym Membership</td>
+              <td>Health</td>
+              <td>- $50</td>
+              <td>Pending</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
+  </div>
 
-    <!-- Transactions Page -->
-    <main id="transactions-page">
-        <h3>Transaction History</h3>
-        <div id="transaction-history"></div>
+  <!-- Transactions Page -->
+  <div id="transactions-page" class="page">
+    <header>
+      <h1>Transactions</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <section class="transactions">
+        <h2>All Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>02/25/25</td>
+              <td>Grocery Shopping</td>
+              <td>Food</td>
+              <td>- $120</td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>02/24/25</td>
+              <td>Salary</td>
+              <td>Income</td>
+              <td>+ $3,500</td>
+              <td>Received</td>
+            </tr>
+            <tr>
+              <td>02/22/25</td>
+              <td>Gym Membership</td>
+              <td>Health</td>
+              <td>- $50</td>
+              <td>Pending</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     </main>
+  </div>
 
-    <!-- Budget Page -->
-    <main id="budget-page">
-        <h1>Budget Overview</h1>
-        <div id="budget-chart-container">
-            <canvas id="budget-chart"></canvas>
-            <div class="chart-key" id="chart-key"></div>
+  <!-- Budget Page -->
+  <div id="budget-page" class="page">
+    <header>
+      <h1>Budget</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <section class="summary">
+        <div class="card">
+          <h3>Monthly Budget</h3>
+          <p>$2,000</p>
         </div>
-        <h2>Savings Goals</h2>
-        <div id="goals-container"></div>
-        <button onclick="showModal('goal-modal')">Add Savings Goal</button>
+        <div class="card">
+          <h3>Spent</h3>
+          <p>$1,250</p>
+        </div>
+        <div class="card">
+          <h3>Remaining</h3>
+          <p>$750</p>
+        </div>
+      </section>
+      <section class="charts">
+        <div class="chart-placeholder">📊 Budget Breakdown</div>
+      </section>
     </main>
-    
-    <div id="goal-modal" class="modal">
-        <div class="modal-content">
-            <h2>Add Savings Goal</h2>
-            <label for="goal-name">Goal Name*</label>
-            <input type="text" id="goal-name" placeholder="Enter goal name">
-            <label for="goal-amount">Target Amount*</label>
-            <input type="number" id="goal-amount" placeholder="Enter target amount">
-            <button onclick="addGoal()">Submit</button>
-            <button class="close-btn" onclick="closeModal('goal-modal')">Cancel</button>
-        </div>
-    </div>
-    
-    <div id="congrats-modal" class="modal">
-        <div class="modal-content">
-            <h2>Congratulations!</h2>
-            <p>You have successfully completed your savings goal!</p>
-            <button class="close-btn" onclick="closeModal('congrats-modal')">Close</button>
-        </div>
-    </div>
+  </div>
 
+  <!-- Settings Page -->
+  <div id="settings-page" class="page">
+    <header>
+      <h1>Settings</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <section class="transactions">
+        <h2>Account Settings</h2>
+        <p>Settings options will go here.</p>
+      </section>
+    </main>
+  </div>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="#" onclick="navigate('home-page')">
-            <i>🏠</i>
-            Home
-        </a>
-        <a href="#" onclick="navigate('transactions-page')">
-            <i>💲</i>
-            Transactions
-        </a>
-        <a href="#" onclick="navigate('budget-page')">
-            <i>💰</i>
-            Budget
-        </a>
-    </nav>
+  <script>
+    // Simple navigation function to show/hide pages
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      const page = document.getElementById(pageId);
+      if (page) {
+        page.classList.add('active');
+      }
+    }
 
-    <!-- Modals -->
-    <div id="existing-money-modal" class="modal">
-        <div class="modal-content">
-            <h2>Add Existing Money</h2>
-            <label for="existing-money">Amount*</label>
-            <input type="number" id="existing-money" placeholder="Enter amount">
-            <button onclick="addExistingMoney()">Submit</button>
-            <button class="close-btn" onclick="closeModal('existing-money-modal')">Cancel</button>
-        </div>
-    </div>
+    // Delegate navigation based on data-page attribute
+    document.body.addEventListener('click', function(e) {
+      if(e.target.matches('a[data-page]')) {
+        showPage(e.target.getAttribute('data-page'));
+      }
+    });
 
-    <div id="monthly-income-modal" class="modal">
-        <div class="modal-content">
-            <h2>Set Monthly Income</h2>
-            <label for="monthly-income">Amount*</label>
-            <input type="number" id="monthly-income" placeholder="Enter monthly income">
-            <button onclick="setMonthlyIncome()">Submit</button>
-            <button class="close-btn" onclick="closeModal('monthly-income-modal')">Cancel</button>
-        </div>
-    </div>
+    // Dummy login action: simply show the dashboard on click
+    document.getElementById('login-btn').addEventListener('click', function() {
+      // Replace with authentication logic as needed
+      showPage('dashboard-page');
+    });
 
-    <div id="random-expense-modal" class="modal">
-        <div class="modal-content">
-            <h2>Add Random Expense</h2>
-            <label for="random-expense">Amount*</label>
-            <input type="number" id="random-expense" placeholder="Enter amount">
-            <label for="random-expense-category">Category*</label>
-            <select id="random-expense-category">
-                <option value="Housing">Housing</option>
-                <option value="Food">Food</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Transport">Transport</option>
-                <option value="Others">Others</option>
-            </select>
-            <button onclick="addRandomExpense()">Submit</button>
-            <button class="close-btn" onclick="closeModal('random-expense-modal')">Cancel</button>
-        </div>
-    </div>
+    // Dummy sign-up action
+    document.getElementById('signup-btn').addEventListener('click', function() {
+      // Replace with registration logic as needed
+      showPage('dashboard-page');
+    });
 
-    <div id="expense-modal" class="modal">
-        <div class="modal-content">
-            <h2>Add Categorized Expense</h2>
-            <label for="expense-amount">Amount*</label>
-            <input type="number" id="expense-amount" placeholder="Enter expense amount">
-            <label for="expense-category">Category*</label>
-            <select id="expense-category">
-                <option value="Housing">Housing</option>
-                <option value="Food">Food</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Transport">Transport</option>
-                <option value="Others">Others</option>
-            </select>
-            <button onclick="addExpense()">Submit</button>
-            <button class="close-btn" onclick="closeModal('expense-modal')">Cancel</button>
-        </div>
-    </div>
-
-    <script>
-        let savingsGoals = [];
-
-        function addGoal() {
-            const goalName = document.getElementById("goal-name").value;
-            const targetAmount = parseFloat(document.getElementById("goal-amount").value);
-    
-            if (goalName && targetAmount > 0) {
-                const newGoal = {
-                    name: goalName,
-                    target: targetAmount,
-                    saved: 0
-                };
-                savingsGoals.push(newGoal);
-                updateGoalsUI();
-                closeModal("goal-modal");
-            } else {
-                alert("Please provide a valid goal name and target amount.");
-            }
-        }
-    
-        function contributeToGoal(goalIndex, amount) {
-            if (totalBalance >= amount && amount > 0) {
-                savingsGoals[goalIndex].saved += amount;
-                totalBalance -= amount;
-                updateBalance();
-    
-                if (savingsGoals[goalIndex].saved >= savingsGoals[goalIndex].target) {
-                    showModal("congrats-modal");
-                    clearGoal(goalIndex);
-                } else {
-                    updateGoalsUI();
-                }
-            } else {
-                alert("Insufficient funds or invalid amount.");
-            }
-        }
-    
-        function clearGoal(goalIndex) {
-            savingsGoals.splice(goalIndex, 1); // Remove the goal from the array
-            updateGoalsUI(); // Refresh the UI
-        }
-    
-        function updateGoalsUI() {
-            const goalsContainer = document.getElementById("goals-container");
-            goalsContainer.innerHTML = "";
-    
-            savingsGoals.forEach((goal, index) => {
-                const progressPercentage = Math.min(
-                    (goal.saved / goal.target) * 100,
-                    100
-                ).toFixed(2);
-    
-                goalsContainer.innerHTML += `
-                    <div class="goal">
-                        <h3>${goal.name}</h3>
-                        <p>Target: $${goal.target.toFixed(2)}</p>
-                        <p>Saved: $${goal.saved.toFixed(2)}</p>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: ${progressPercentage}%"></div>
-                        </div>
-                        <button onclick="promptContribution(${index})">Contribute</button>
-                        <button onclick="clearGoal(${index})" style="margin-top: 5px;">Clear Goal</button>
-                    </div>
-                `;
-            });
-        }
-    
-        function promptContribution(goalIndex) {
-            const contribution = parseFloat(
-                prompt(`Enter contribution amount for "${savingsGoals[goalIndex].name}":`)
-            );
-            if (!isNaN(contribution)) {
-                contributeToGoal(goalIndex, contribution);
-            }
-        }
-    
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = "block";
-        }
-    
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
-    //Password
-        let users = {}; // Store hashed passwords
-
-        function hashPassword(password) {
-            return CryptoJS.SHA256(password).toString();
-        }
-
-        function login() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            const hashedPassword = hashPassword(password);
-
-            if (users[username] === hashedPassword) {
-                alert('Login successful!');
-                document.getElementById('login-page').style.display = 'none';
-                document.getElementById('home-page').style.display = 'block';
-            } else {
-                alert('Invalid username or password.');
-            }
-        }
-
-        function signup() {
-            const username = document.getElementById('signup-username').value;
-            const password = document.getElementById('signup-password').value;
-            const hashedPassword = hashPassword(password);
-
-            if (users[username]) {
-                alert('Username already exists.');
-            } else {
-                users[username] = hashedPassword;
-                alert('Signup successful! Please login.');
-                showLoginPage();
-            }
-        }
-
-        function showSignupPage() {
-            document.getElementById('login-page').style.display = 'none';
-            document.getElementById('signup-page').style.display = 'block';
-        }
-
-        function showLoginPage() {
-            document.getElementById('signup-page').style.display = 'none';
-            document.getElementById('login-page').style.display = 'block';
-        }
-        let totalBalance = 0;
-        let transactionHistory = [];
-        let spendingByCategory = {
-            Housing: 0,
-            Food: 0,
-            Entertainment: 0,
-            Transport: 0,
-            Others: 0
-        };
-        function navigate(pageId) {
-        document.querySelectorAll('main').forEach(page => {
-            page.classList.remove('active');
-            page.style.display = 'none';
-        });
-            document.getElementById(pageId).style.display = 'block';
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-       // Add Existing Money
-        function addExistingMoney() {
-            const amount = parseFloat(document.getElementById('existing-money').value);
-            if (!isNaN(amount) && amount > 0) {
-                totalBalance += amount;
-                transactionHistory.push({
-                    description: "Existing Money Added",
-                    amount: amount,
-                    timestamp: new Date().toLocaleString()
-                });
-                updateBalance();
-                updateTransactionHistory();
-                closeModal('existing-money-modal');
-            } else {
-                alert("Please enter a valid amount.");
-            }
-        }
-
-        // Set Monthly Income
-        function setMonthlyIncome() {
-            const income = parseFloat(document.getElementById('monthly-income').value);
-            if (!isNaN(income) && income > 0) {
-                transactionHistory.push({
-                    description: "Monthly Income Set",
-                    amount: income,
-                    timestamp: new Date().toLocaleString()
-                });
-                updateTransactionHistory();
-                closeModal('monthly-income-modal');
-            } else {
-                alert("Please enter a valid income.");
-            }
-        }
-
-        // Add Random Expense
-        function addRandomExpense() {
-            const amount = parseFloat(document.getElementById('random-expense').value);
-            const category = document.getElementById('random-expense-category').value;
-
-            if (!isNaN(amount) && amount > 0 && category) {
-                totalBalance -= amount;
-                spendingByCategory[category] += amount;
-                transactionHistory.push({
-                    description: `Random Expense - ${category}`,
-                    amount: -amount,
-                    timestamp: new Date().toLocaleString()
-                });
-
-                updateBalance();
-                updateTransactionHistory();
-                updateBudgetChart();
-                closeModal('random-expense-modal');
-            } else {
-                alert("Please fill out all fields correctly.");
-            }
-        }
-
-        // Add Categorized Expense
-        function addExpense() {
-            const amount = parseFloat(document.getElementById('expense-amount').value);
-            const category = document.getElementById('expense-category').value;
-
-            if (!isNaN(amount) && amount > 0 && category) {
-                totalBalance -= amount;
-                spendingByCategory[category] += amount;
-                transactionHistory.push({
-                    description:
-                                        `Expense - ${category}`,
-                    amount: -amount,
-                    timestamp: new Date().toLocaleString()
-                });
-
-                updateBalance();
-                updateTransactionHistory();
-                updateBudgetChart();
-                closeModal('expense-modal');
-            } else {
-                alert("Please fill out all fields correctly.");
-            }
-        }
-
-        // Add Categorized Expense
-        function addExpense() {
-            const amount = parseFloat(document.getElementById('expense-amount').value);
-            const category = document.getElementById('expense-category').value;
-
-            if (!isNaN(amount) && amount > 0 && category) {
-                totalBalance -= amount;
-                spendingByCategory[category] += amount;
-                transactionHistory.push({
-                    description: `Expense - ${category}`,
-                    amount: -amount,
-                    timestamp: new Date().toLocaleString()
-                });
-
-                updateBalance();
-                updateTransactionHistory();
-                updateBudgetChart();
-                closeModal('expense-modal');
-            } else {
-                alert("Please fill out all fields correctly.");
-            }
-        }
-
-        function updateTransactionHistory() {
-            const historyDiv = document.getElementById('transaction-history');
-            historyDiv.innerHTML = transactionHistory.map(transaction =>
-                `<div class="transaction">
-                                    <span>${transaction.description}:</span> $${transaction.amount.toFixed(2)}
-                    <small>(${transaction.timestamp})</small>
-                </div>`
-            ).join('');
-        }
-
-        function updateBalance() {
-            document.getElementById('total-balance').innerText = totalBalance.toFixed(2);
-        }
-
-        const ctx = document.getElementById('budget-chart').getContext('2d');
-        let budgetChart;
-
-        function updateBudgetChart() {
-            const labels = Object.keys(spendingByCategory);
-            const data = Object.values(spendingByCategory);
-            const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
-
-            if (budgetChart) {
-                budgetChart.data.labels = labels;
-                budgetChart.data.datasets[0].data = data;
-                budgetChart.update();
-            } else {
-                budgetChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data,
-                            backgroundColor: colors,
-                            borderWidth: 1,
-                        }]
-                    },
-                    options: {
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function (tooltipItem) {
-                                        const category = tooltipItem.label;
-                                        const value = tooltipItem.raw;
-                                        return `${category}: $${value.toFixed(2)}`;
-                                    }
-                                }
-                            },
-                            legend: { display: false }
-                        },
-                        cutout: '70%',
-                    }
-                });
-            }
-
-            const keyDiv = document.getElementById('chart-key');
-            keyDiv.innerHTML = labels.map((label, index) =>
-                `<span style="background-color: ${colors[index]}; padding: 5px 10px; border-radius: 5px;">
-                    ${label}
-                </span>`
-            ).join('');
-        }
-    </script>
+    // Navigation between login and sign up pages
+    document.getElementById('go-to-signup').addEventListener('click', function() {
+      showPage('signup-page');
+    });
+    document.getElementById('go-to-login').addEventListener('click', function() {
+      showPage('login-page');
+    });
+  </script>
 </body>
 </html>
