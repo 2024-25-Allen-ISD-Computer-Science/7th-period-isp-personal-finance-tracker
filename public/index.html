@@ -23,247 +23,223 @@
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <style>
-              :root {
-            --bg-color: #1c1c1c;
-            --text-color: #ffffff;
-            --container-bg: #333;
-            --button-bg: #444;
-            --highlight-color: #50fa7b;
+        /* General Reset & Fonts */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: Arial, sans-serif;
         }
-
         body {
-            font-family: Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
+          background-color: #f5f7fa;
+          color: #333;
+          padding: 20px;
         }
-
+        /* HEADER */
+        header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #2a2d3e;
+          color: white;
+          padding: 15px 30px;
+          border-radius: 8px;
+        }
+        nav ul {
+          list-style: none;
+          display: flex;
+        }
+        nav ul li {
+          margin: 0 15px;
+        }
+        nav ul li a {
+          text-decoration: none;
+          color: white;
+          font-weight: bold;
+          cursor: pointer;
+        }
+        .profile {
+          font-weight: bold;
+        }
+        /* MAIN CONTENT & Page Visibility */
         main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: none;
-            width: 100%;
-            max-width: 400px;
+          margin-top: 20px;
         }
-
-        main.active {
-            display: block;
+        .page {
+          display: none;
         }
-
-        nav {
-            background-color: var(--container-bg);
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-around;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            border-top: 1px solid #444;
+        .page.active {
+          display: block;
         }
-
-        nav a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-size: 14px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* DASHBOARD - Summary Cards */
+        .summary {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+          margin-bottom: 20px;
         }
-
-        nav a:hover {
-            color: var(--highlight-color);
+        .card {
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          text-align: center;
+          cursor: pointer;
         }
-
-        nav a i {
-            font-size: 24px;
-            margin-bottom: 5px;
+        .card h3 {
+          font-size: 1.2em;
+          margin-bottom: 10px;
         }
-
-        h1, h2, h3 {
-            text-align: center;
-            color: var(--text-color);
+        /* CHARTS / Placeholder */
+        .charts {
+          display: flex;
+          gap: 15px;
+          margin-top: 20px;
         }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: var(--container-bg);
-            color: var(--text-color);
-            margin: 10px 0;
-            display: block;
-            width: 100%;
-            text-align: center;
-            max-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
+        .chart-placeholder {
+          background: white;
+          flex: 1;
+          padding: 40px;
+          text-align: center;
+          border-radius: 8px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        button:hover {
-            background-color: var(--button-bg);
+        /* TRANSACTIONS TABLE */
+        .transactions h2 {
+          margin-bottom: 10px;
         }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: var(--container-bg);
-            color: var(--text-color);
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          background: white;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-
-        #total-balance {
-            color: #50fa7b;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
+        table th, table td {
+          padding: 12px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
         }
-
-        #transaction-history {
-            border: 1px solid #333;
-            padding: 10px;
-            margin-top: 20px;
-            border-radius: 5px;
-            background-color: #2b2b2b;
-            max-height: 300px;
-            overflow-y: auto;
+        table th {
+          background-color: #2a2d3e;
+          color: white;
         }
-
-        .transaction {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
+        table tr:hover {
+          background-color: #f1f1f1;
         }
-
-        .transaction span {
-            font-weight: bold;
-            color: #ff5555;
+        /* AUTH (Login/Signup) Containers */
+        .auth-container {
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          width: 300px;
+          margin: 100px auto;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          text-align: center;
         }
-
-        /* Modals */
+        .auth-container h2 {
+          margin-bottom: 20px;
+        }
+        .auth-container input {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+        .auth-container button {
+          width: 100%;
+          padding: 10px;
+          background-color: #2a2d3e;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .auth-container p {
+          margin-top: 10px;
+        }
+        .auth-container a {
+          color: #2a2d3e;
+          cursor: pointer;
+          text-decoration: underline;
+        }
+        /* MODALS */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.5);
+          z-index: 1000;
         }
-
         .modal-content {
-            background-color: #333;
-            color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          background: white;
+          color: #333;
+          margin: 10% auto;
+          padding: 20px;
+          border-radius: 8px;
+          width: 90%;
+          max-width: 400px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-
         .modal-content h2 {
-            text-align: center;
-            margin-bottom: 20px;
+          margin-bottom: 20px;
         }
-
+        .modal-content input,
+        .modal-content select {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
         .modal-content button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #555;
-            color: #fff;
-            display: block;
-            margin: 10px auto 0 auto;
+          width: 100%;
+          padding: 10px;
+          background-color: #2a2d3e;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-bottom: 10px;
         }
-
-        .modal-content button:hover {
-            background-color: #777;
-        }
-
         .modal-content .close-btn {
-            background-color: #ff5555;
+          background-color: #ff5555;
         }
-
-        .modal-content .close-btn:hover {
-            background-color: #ff7777;
+        /* BUDGET CHARTS & Weekly Bar Graph */
+        #budget-chart-container, #weekly-chart-container {
+          max-width: 600px;
+          margin: 20px auto;
         }
-
-        /* Budget Chart */
-        #budget-chart-container {
-            max-width: 600px;
-            margin: 20px auto;
-        }
-
         .chart-key {
-            text-align: center;
-            margin-top: 10px;
+          text-align: center;
+          margin-top: 10px;
         }
-
         .chart-key span {
-            display: inline-block;
-            margin: 0 10px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #ffffff;
+          display: inline-block;
+          margin: 0 10px;
+          padding: 5px 10px;
+          border-radius: 5px;
+          color: #ffffff;
         }
-
-        /* Login and Signup Styles */
-        .container {
-            background-color: var(--container-bg);
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            margin: 20px auto;
-            text-align: center;
+        /* BUTTON Styles for Transactions Page */
+        .trans-btn {
+          padding: 10px 20px;
+          margin: 10px 5px;
+          border: none;
+          border-radius: 4px;
+          background-color: #2a2d3e;
+          color: white;
+          cursor: pointer;
         }
-        .link {
-            text-align: center;
-            margin-top: 10px;
-            color: #50fa7b;
+        .trans-btn:hover {
+          background-color: #1f232f;
         }
-
-        .link a {
-            text-decoration: none;
-            color: #50fa7b;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
-
-        #login-page, #signup-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #1c1c1c;
-        }
-        #monthly-report {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: var(--container-bg);
-            border-radius: 5px;
-            text-align: center;
-        }
-  </style>
+      </style>
   </head>
   <body>
     <p id="load">Firebase SDK Loading&hellip;</p>
@@ -306,431 +282,645 @@
         }
       });
     </script>
-    <!-- Login Page -->
-    <div class="container" id="login-page">
-      <h1>Login</h1>
-      <input type="text" id="login-username" placeholder="Username">
-      <input type="password" id="login-password" placeholder="Password">
-      <button onclick="login()">Login</button>
-      <div class="link">
-          <p>Don't have an account? <a href="#" onclick="showSignupPage()">Sign Up</a></p>
-      </div>
+    <!-- LOGIN PAGE -->
+  <div id="login-page" class="page active">
+    <div class="auth-container">
+      <h2>Login</h2>
+      <input type="text" id="login-username" placeholder="Username" />
+      <input type="password" id="login-password" placeholder="Password" />
+      <button onclick="login()">Log In</button>
+      <p>Don't have an account? <a onclick="showSignupPage()">Sign Up</a></p>
+    </div>
   </div>
 
-  <!-- Signup Page -->
-  <div class="container" id="signup-page" style="display: none;">
-      <h1>Sign Up</h1>
-      <input type="text" id="signup-username" placeholder="Choose a Username">
-      <input type="password" id="signup-password" placeholder="Choose a Password">
+  <!-- SIGNUP PAGE -->
+  <div id="signup-page" class="page">
+    <div class="auth-container">
+      <h2>Sign Up</h2>
+      <input type="text" id="signup-username" placeholder="Choose a Username" />
+      <input type="password" id="signup-password" placeholder="Choose a Password" />
       <button onclick="signup()">Sign Up</button>
-      <div class="link">
-          <p>Already have an account? <a href="#" onclick="showLoginPage()">Login</a></p>
-      </div>
+      <p>Already have an account? <a onclick="showLoginPage()">Log In</a></p>
+    </div>
   </div>
 
-  <!-- Home Page -->
-  <main id="home-page">
-      <h1>Personal Finance Tracker</h1>
-      <button onclick="showModal('existing-money-modal')">Add Existing Money</button>
-      <button onclick="showModal('monthly-income-modal')">Set Monthly Income</button>
-      <button onclick="showModal('random-expense-modal')">Add Random Expense</button>
-      <button onclick="showModal('expense-modal')">Add Categorized Expense</button>
-      <h2>Total Balance: $<span id="total-balance">0.00</span></h2>
+  <!-- DASHBOARD PAGE -->
+  <div id="dashboard-page" class="page">
+    <header>
+      <h1>Finance Tracker</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <section class="summary">
+        <div class="card">
+          <h3>Total Balance</h3>
+          <p>$<span id="balance-display">0.00</span></p>
+        </div>
+        <div class="card">
+          <h3>Income This Month</h3>
+          <p id="income-this-month">+ $0.00</p>
+        </div>
+        <div class="card">
+          <h3>Expenses This Month</h3>
+          <p id="expenses-this-month">- $0.00</p>
+        </div>
+        <!-- New card for Budget Overview -->
+        <div class="card" onclick="navigate('budget-page')">
+          <h3>Budget Overview</h3>
+          <p>View monthly budget details</p>
+        </div>
+      </section>
+      <section class="transactions">
+        <h2>Recent Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="recent-transactions">
+            <!-- Recent transactions will be injected here -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
 
-  </main>
-  <!--Settings-->
-  <main id="settings-page" style="display: none;">
-    <h1>Settings</h1>
-    <div class="container">
+  <!-- TRANSACTIONS PAGE -->
+  <div id="transactions-page" class="page">
+    <header>
+      <h1>Transactions</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <!-- Four buttons for money actions -->
+      <div style="text-align: center; margin-bottom: 20px;">
+        <button class="trans-btn" onclick="showModal('existing-money-modal')">Add Existing Money</button>
+        <button class="trans-btn" onclick="showModal('monthly-income-modal')">Set Monthly Income</button>
+        <button class="trans-btn" onclick="showModal('random-expense-modal')">Add Random Expense</button>
+        <button class="trans-btn" onclick="showModal('expense-modal')">Add Categorized Expense</button>
+      </div>
+      <div class="transactions">
+        <h2>Transaction History</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="transaction-history">
+            <!-- Transaction history will be injected here -->
+          </tbody>
+        </table>
+      </div>
+      <div id="monthly-report" style="margin-top: 20px; text-align: center;">
+        <h2>Monthly Report</h2>
+        <div id="report-text">
+          Click the button below to generate your monthly report.
+        </div>
+        <button class="trans-btn" style="margin-top:10px;" onclick="generateMonthlyReport()">Generate Report</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- BUDGET PAGE -->
+  <div id="budget-page" class="page">
+    <header>
+      <h1>Budget Overview</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <!-- Summary Card for Budget Utilization -->
+      <section class="summary">
+        <div class="card">
+          <h3>Budget Utilization</h3>
+          <p id="budget-utilization">0%</p>
+        </div>
+      </section>
+      <!-- Donut Chart for Spending by Category -->
+      <div id="budget-chart-container">
+        <canvas id="budget-chart"></canvas>
+        <div class="chart-key" id="chart-key"></div>
+      </div>
+      <!-- Adaptive Bar Graph: Weekly Spending (computed from transaction history) -->
+      <h2 style="text-align: center; margin-top: 20px;">Weekly Spending</h2>
+      <div id="weekly-chart-container">
+        <canvas id="weekly-bar-chart"></canvas>
+      </div>
+      <h2>Monthly Budget</h2>
+      <button class="trans-btn" onclick="showModal('goal-modal')">Monthly Budget</button>
+    </main>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div id="settings-page" class="page">
+    <header>
+      <h1>Settings</h1>
+      <nav>
+        <ul>
+          <li><a data-page="dashboard-page">Dashboard</a></li>
+          <li><a data-page="transactions-page">Transactions</a></li>
+          <li><a data-page="budget-page">Budget</a></li>
+          <li><a data-page="settings-page">Settings</a></li>
+        </ul>
+      </nav>
+      <div class="profile">
+        <span>👤 John Doe</span>
+      </div>
+    </header>
+    <main>
+      <div style="margin-bottom:20px;">
         <h2>Change Username</h2>
-        <input type="text" id="new-username" placeholder="Enter new username">
+        <input type="text" id="new-username" placeholder="Enter new username" />
         <button onclick="changeUsername()">Save Username</button>
-    </div>
-    <div class="container">
+      </div>
+      <div style="margin-bottom:20px;">
         <h2>Change Password</h2>
-        <input type="password" id="new-password" placeholder="Enter new password">
+        <input type="password" id="new-password" placeholder="Enter new password" />
         <button onclick="changePassword()">Save Password</button>
-    </div>
-    <div class="container">
+      </div>
+      <div>
         <h2>Theme Settings</h2>
         <button onclick="toggleTheme()">Toggle Light/Dark Mode</button>
-    </div>
-</main>
-
-  <!-- Transactions Page -->
-  <main id="transactions-page">
-      <h3>Transaction History</h3>
-      <div id="transaction-history"></div>
-  </main>
-
-  <!-- Budget Page -->
-  <main id="budget-page">
-      <h1>Budget Overview</h1>
-      <div id="budget-chart-container">
-          <canvas id="budget-chart"></canvas>
-          <div class="chart-key" id="chart-key"></div>
       </div>
-  </main>
+    </main>
+  </div>
 
-  <!-- Navigation -->
-  <nav>
-      <a href="#" onclick="navigate('home-page')">
-          <i>🏠</i>
-          Home
-      </a>
-      <a href="#" onclick="navigate('transactions-page')">
-          <i>💲</i>
-          Transactions
-      </a>
-      <a href="#" onclick="navigate('budget-page')">
-          <i>💰</i>
-          Budget
-      </a>
-      <a href="#" onclick="navigate('settings-page')">
-        <i>⚙️</i>
-        Settings
-    </a>
-  </nav>
-
-  <!-- Modals -->
+  <!-- MODALS -->
+  <!-- Add Existing Money Modal -->
   <div id="existing-money-modal" class="modal">
-      <div class="modal-content">
-          <h2>Add Existing Money</h2>
-          <label for="existing-money">Amount*</label>
-          <input type="number" id="existing-money" placeholder="Enter amount">
-          <button onclick="addExistingMoney()">Submit</button>
-          <button class="close-btn" onclick="closeModal('existing-money-modal')">Cancel</button>
-      </div>
+    <div class="modal-content">
+      <h2>Add Existing Money</h2>
+      <input type="number" id="existing-money" placeholder="Enter amount" />
+      <button onclick="addExistingMoney()">Submit</button>
+      <button class="close-btn" onclick="closeModal('existing-money-modal')">Cancel</button>
+    </div>
   </div>
 
+  <!-- Set Monthly Income Modal -->
   <div id="monthly-income-modal" class="modal">
-      <div class="modal-content">
-          <h2>Set Monthly Income</h2>
-          <label for="monthly-income">Amount*</label>
-          <input type="number" id="monthly-income" placeholder="Enter monthly income">
-          <button onclick="setMonthlyIncome()">Submit</button>
-          <button class="close-btn" onclick="closeModal('monthly-income-modal')">Cancel</button>
-      </div>
+    <div class="modal-content">
+      <h2>Set Monthly Income</h2>
+      <input type="number" id="monthly-income" placeholder="Enter monthly income" />
+      <button onclick="setMonthlyIncome()">Submit</button>
+      <button class="close-btn" onclick="closeModal('monthly-income-modal')">Cancel</button>
+    </div>
   </div>
 
+  <!-- Add Random Expense Modal -->
   <div id="random-expense-modal" class="modal">
-      <div class="modal-content">
-          <h2>Add Random Expense</h2>
-          <label for="random-expense">Amount*</label>
-          <input type="number" id="random-expense" placeholder="Enter amount">
-          <label for="random-expense-category">Category*</label>
-          <select id="random-expense-category">
-              <option value="Housing">Housing</option>
-              <option value="Food">Food</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Transport">Transport</option>
-              <option value="Others">Others</option>
-          </select>
-          <button onclick="addRandomExpense()">Submit</button>
-          <button class="close-btn" onclick="closeModal('random-expense-modal')">Cancel</button>
-      </div>
+    <div class="modal-content">
+      <h2>Add Random Expense</h2>
+      <input type="number" id="random-expense" placeholder="Enter amount" />
+      <select id="random-expense-category">
+        <option value="Housing">Housing</option>
+        <option value="Food">Food</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Transport">Transport</option>
+        <option value="Others">Others</option>
+      </select>
+      <button onclick="addRandomExpense()">Submit</button>
+      <button class="close-btn" onclick="closeModal('random-expense-modal')">Cancel</button>
+    </div>
   </div>
 
+  <!-- Add Categorized Expense Modal -->
   <div id="expense-modal" class="modal">
-      <div class="modal-content">
-          <h2>Add Categorized Expense</h2>
-          <label for="expense-amount">Amount*</label>
-          <input type="number" id="expense-amount" placeholder="Enter expense amount">
-          <label for="expense-category">Category*</label>
-          <select id="expense-category">
-              <option value="Housing">Housing</option>
-              <option value="Food">Food</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Transport">Transport</option>
-              <option value="Others">Others</option>
-          </select>
-          <button onclick="addExpense()">Submit</button>
-          <button class="close-btn" onclick="closeModal('expense-modal')">Cancel</button>
-      </div>
+    <div class="modal-content">
+      <h2>Add Categorized Expense</h2>
+      <input type="number" id="expense-amount" placeholder="Enter expense amount" />
+      <select id="expense-category">
+        <option value="Housing">Housing</option>
+        <option value="Food">Food</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Transport">Transport</option>
+        <option value="Others">Others</option>
+      </select>
+      <button onclick="addExpense()">Submit</button>
+      <button class="close-btn" onclick="closeModal('expense-modal')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Add Monthly Budget Modal -->
+  <div id="goal-modal" class="modal">
+    <div class="modal-content">
+      <h2>Add Monthly Budget</h2>
+      <input type="number" id="goal-amount" placeholder="Set your monthly budget" />
+      <button onclick="setMonthlyBudget()">Submit</button>
+      <button class="close-btn" onclick="closeModal('goal-modal')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Congratulations Modal -->
+  <div id="congrats-modal" class="modal">
+    <div class="modal-content">
+      <h2>Congratulations!</h2>
+      <p>You have successfully completed your goal!</p>
+      <button class="close-btn" onclick="closeModal('congrats-modal')">Close</button>
+    </div>
   </div>
 
   <script>
-    //Setings
-        function changeUsername() {
-            const newUsername = document.getElementById("new-username").value;
-            if (newUsername) {
-                alert("Username changed successfully!");
-            } else {
-                alert("Please enter a valid username.");
-            }
-        }
-
-        function changePassword() {
-            const newPassword = document.getElementById("new-password").value;
-            if (newPassword) {
-                alert("Password changed successfully!");
-            } else {
-                alert("Please enter a valid password.");
-            }
-        }
-
-        function toggleTheme() {
-            if (document.documentElement.style.getPropertyValue('--bg-color') === '#1c1c1c') {
-                document.documentElement.style.setProperty('--bg-color', '#ffffff');
-                document.documentElement.style.setProperty('--text-color', '#000000');
-                document.documentElement.style.setProperty('--container-bg', '#f0f0f0');
-                document.documentElement.style.setProperty('--button-bg', '#cccccc');
-            } else {
-                document.documentElement.style.setProperty('--bg-color', '#1c1c1c');
-                document.documentElement.style.setProperty('--text-color', '#ffffff');
-                document.documentElement.style.setProperty('--container-bg', '#333');
-                document.documentElement.style.setProperty('--button-bg', '#444');
-            }
-        }
-        function navigate(pageId) {
-            document.querySelectorAll('main').forEach(page => {
-                page.classList.remove('active');
-                page.style.display = 'none';
-            });
-            document.getElementById(pageId).style.display = 'block';
-            document.getElementById(pageId).classList.add('active');
-        }
-      let users = [
-          { username: 'Tester', password: '1234' }
-      ];
-      let loggedIn = false;
-      
-
-      function login() {
-          const username = document.getElementById('login-username').value;
-          const password = document.getElementById('login-password').value;
-
-          const user = users.find(user => user.username === username && user.password === password);
-          
-          if (user) {
-              loggedIn = true;
-              alert('Login successful!');
-              document.getElementById('login-page').style.display = 'none';
-              navigate('home-page');
-          } else {
-              alert('Invalid username or password.');
-          }
-      }
-
-      function signup() {
-          const username = document.getElementById('signup-username').value;
-          const password = document.getElementById('signup-password').value;
-
-          if (username && password) {
-              if (users.some(user => user.username === username)) {
-                  alert('Username already exists.');
-              } else {
-                  users.push({ username, password });
-                  alert('Signup successful! Please login.');
-                  showLoginPage();
-              }
-          } else {
-              alert('Please fill out all fields.');
-          }
-      }
-
-      function showSignupPage() {
-          document.getElementById('login-page').style.display = 'none';
-          document.getElementById('signup-page').style.display = 'block';
-      }
-
-      function showLoginPage() {
-          document.getElementById('signup-page').style.display = 'none';
-          document.getElementById('login-page').style.display = 'block';
-      }
-      
-      let totalBalance = 0;
-      let transactionHistory = [];
-      let spendingByCategory = {
-          Housing: 0,
-          Food: 0,
-          Entertainment: 0,
-          Transport: 0,
-          Others: 0
-      };
-      function navigate(pageId) {
-      document.querySelectorAll('main').forEach(page => {
-          page.classList.remove('active');
-          page.style.display = 'none';
+    // ------------------------
+    // Navigation Logic
+    // ------------------------
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
       });
-          document.getElementById(pageId).style.display = 'block';
-          document.getElementById(pageId).classList.add('active');
+      document.getElementById(pageId).classList.add('active');
+    }
+    // Delegate navigation for header links
+    document.body.addEventListener('click', function(e) {
+      if(e.target.matches('a[data-page]')) {
+        showPage(e.target.getAttribute('data-page'));
       }
+    });
+    function navigate(pageId) {
+      showPage(pageId);
+    }
 
-      function showModal(modalId) {
-          document.getElementById(modalId).style.display = 'block';
+    // ------------------------
+    // Authentication
+    // ------------------------
+    let users = {}; // username: hashedPassword
+
+    function hashPassword(password) {
+      return CryptoJS.SHA256(password).toString();
+    }
+
+    function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const hashedPassword = hashPassword(password);
+      if(users[username] === hashedPassword) {
+        alert('Login successful!');
+        showPage('dashboard-page');
+      } else {
+        alert('Invalid username or password.');
       }
+    }
 
-      function closeModal(modalId) {
-          document.getElementById(modalId).style.display = 'none';
+    function signup() {
+      const username = document.getElementById('signup-username').value;
+      const password = document.getElementById('signup-password').value;
+      const hashedPassword = hashPassword(password);
+      if(users[username]) {
+        alert('Username already exists.');
+      } else {
+        users[username] = hashedPassword;
+        alert('Signup successful! Please log in.');
+        showLoginPage();
       }
+    }
 
-     // Add Existing Money
-      function addExistingMoney() {
-          const amount = parseFloat(document.getElementById('existing-money').value);
-          if (!isNaN(amount) && amount > 0) {
-              totalBalance += amount;
-              transactionHistory.push({
-                  description: "Existing Money Added",
-                  amount: amount,
-                  timestamp: new Date().toLocaleString()
-              });
-              updateBalance();
-              updateTransactionHistory();
-              closeModal('existing-money-modal');
-          } else {
-              alert("Please enter a valid amount.");
-          }
+    function showSignupPage() {
+      showPage('signup-page');
+    }
+    function showLoginPage() {
+      showPage('login-page');
+    }
+
+    // ------------------------
+    // Global Financial Data
+    // ------------------------
+    let totalBalance = 0;
+    let transactionHistory = [];
+    let spendingByCategory = {
+      Housing: 0,
+      Food: 0,
+      Entertainment: 0,
+      Transport: 0,
+      Others: 0
+    };
+    // Default monthly budget value (updatable via modal)
+    let monthlyBudget = 2000;
+
+    function updateBalance() {
+      document.getElementById('balance-display').innerText = totalBalance.toFixed(2);
+    }
+
+    function updateTransactionHistory() {
+      const historyTbody = document.getElementById('transaction-history');
+      historyTbody.innerHTML = transactionHistory.map(tx => {
+        return `<tr>
+                  <td>${tx.timestamp}</td>
+                  <td>${tx.description}</td>
+                  <td>$${tx.amount.toFixed(2)}</td>
+                </tr>`;
+      }).join('');
+      // Also update recent transactions in the dashboard (last 3)
+      const recent = transactionHistory.slice(-3).reverse().map(tx => {
+        return `<tr>
+                  <td>${tx.timestamp}</td>
+                  <td>${tx.description}</td>
+                  <td>$${tx.amount.toFixed(2)}</td>
+                </tr>`;
+      }).join('');
+      document.getElementById('recent-transactions').innerHTML = recent;
+      updateDashboardSummary();
+    }
+
+    function updateDashboardSummary() {
+      let totalIncome = 0;
+      let totalExpenses = 0;
+      transactionHistory.forEach(tx => {
+        if(tx.amount > 0) {
+          totalIncome += tx.amount;
+        } else {
+          totalExpenses += Math.abs(tx.amount);
+        }
+      });
+      document.getElementById('income-this-month').innerText = `+ $${totalIncome.toFixed(2)}`;
+      document.getElementById('expenses-this-month').innerText = `- $${totalExpenses.toFixed(2)}`;
+    }
+
+    function generateMonthlyReport() {
+      let totalIncome = 0;
+      let totalExpenses = 0;
+      transactionHistory.forEach(tx => {
+        if(tx.amount > 0) {
+          totalIncome += tx.amount;
+        } else {
+          totalExpenses += Math.abs(tx.amount);
+        }
+      });
+      document.getElementById("report-text").innerHTML = `
+        <p>Total Income: <strong>$${totalIncome.toFixed(2)}</strong></p>
+        <p>Total Expenses: <strong>$${totalExpenses.toFixed(2)}</strong></p>
+        <p>Net Savings: <strong>$${(totalIncome - totalExpenses).toFixed(2)}</strong></p>
+      `;
+    }
+
+    // ------------------------
+    // Modal Functions
+    // ------------------------
+    function showModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // ------------------------
+    // Transaction Functions
+    // ------------------------
+    function addExistingMoney() {
+      const amount = parseFloat(document.getElementById('existing-money').value);
+      if(!isNaN(amount) && amount > 0) {
+        totalBalance += amount;
+        transactionHistory.push({
+          description: "Existing Money Added",
+          amount: amount,
+          timestamp: new Date().toLocaleString()
+        });
+        updateBalance();
+        updateTransactionHistory();
+        closeModal('existing-money-modal');
+      } else {
+        alert("Please enter a valid amount.");
       }
+    }
 
-      // Set Monthly Income
-      function setMonthlyIncome() {
-          const income = parseFloat(document.getElementById('monthly-income').value);
-          if (!isNaN(income) && income > 0) {
-              transactionHistory.push({
-                  description: "Monthly Income Set",
-                  amount: income,
-                  timestamp: new Date().toLocaleString()
-              });
-              updateTransactionHistory();
-              closeModal('monthly-income-modal');
-          } else {
-              alert("Please enter a valid income.");
-          }
+    function setMonthlyIncome() {
+      const income = parseFloat(document.getElementById('monthly-income').value);
+      if(!isNaN(income) && income > 0) {
+        transactionHistory.push({
+          description: "Monthly Income Set",
+          amount: income,
+          timestamp: new Date().toLocaleString()
+        });
+        updateTransactionHistory();
+        closeModal('monthly-income-modal');
+      } else {
+        alert("Please enter a valid income.");
       }
+    }
 
-      // Add Random Expense
-      function addRandomExpense() {
-          const amount = parseFloat(document.getElementById('random-expense').value);
-          const category = document.getElementById('random-expense-category').value;
-
-          if (!isNaN(amount) && amount > 0 && category) {
-              totalBalance -= amount;
-              spendingByCategory[category] += amount;
-              transactionHistory.push({
-                  description: `Random Expense - ${category}`,
-                  amount: -amount,
-                  timestamp: new Date().toLocaleString()
-              });
-
-              updateBalance();
-              updateTransactionHistory();
-              updateBudgetChart();
-              closeModal('random-expense-modal');
-          } else {
-              alert("Please fill out all fields correctly.");
-          }
+    function addRandomExpense() {
+      const amount = parseFloat(document.getElementById('random-expense').value);
+      const category = document.getElementById('random-expense-category').value;
+      if(!isNaN(amount) && amount > 0 && category) {
+        totalBalance -= amount;
+        spendingByCategory[category] += amount;
+        transactionHistory.push({
+          description: `Random Expense - ${category}`,
+          amount: -amount,
+          timestamp: new Date().toLocaleString()
+        });
+        updateBalance();
+        updateTransactionHistory();
+        updateBudgetChart();
+        updateBudgetUtilization();
+        updateWeeklyBarChart();
+        closeModal('random-expense-modal');
+      } else {
+        alert("Please fill out all fields correctly.");
       }
+    }
 
-      // Add Categorized Expense
-      function addExpense() {
-          const amount = parseFloat(document.getElementById('expense-amount').value);
-          const category = document.getElementById('expense-category').value;
-
-          if (!isNaN(amount) && amount > 0 && category) {
-              totalBalance -= amount;
-              spendingByCategory[category] += amount;
-              transactionHistory.push({
-                  description:
-                                      `Expense - ${category}`,
-                  amount: -amount,
-                  timestamp: new Date().toLocaleString()
-              });
-
-              updateBalance();
-              updateTransactionHistory();
-              updateBudgetChart();
-              closeModal('expense-modal');
-          } else {
-              alert("Please fill out all fields correctly.");
-          }
+    function addExpense() {
+      const amount = parseFloat(document.getElementById('expense-amount').value);
+      const category = document.getElementById('expense-category').value;
+      if(!isNaN(amount) && amount > 0 && category) {
+        totalBalance -= amount;
+        spendingByCategory[category] += amount;
+        transactionHistory.push({
+          description: `Expense - ${category}`,
+          amount: -amount,
+          timestamp: new Date().toLocaleString()
+        });
+        updateBalance();
+        updateTransactionHistory();
+        updateBudgetChart();
+        updateBudgetUtilization();
+        updateWeeklyBarChart();
+        closeModal('expense-modal');
+      } else {
+        alert("Please fill out all fields correctly.");
       }
+    }
 
-      // Add Categorized Expense
-      function addExpense() {
-          const amount = parseFloat(document.getElementById('expense-amount').value);
-          const category = document.getElementById('expense-category').value;
-
-          if (!isNaN(amount) && amount > 0 && category) {
-              totalBalance -= amount;
-              spendingByCategory[category] += amount;
-              transactionHistory.push({
-                  description: `Expense - ${category}`,
-                  amount: -amount,
-                  timestamp: new Date().toLocaleString()
-              });
-
-              updateBalance();
-              updateTransactionHistory();
-              updateBudgetChart();
-              closeModal('expense-modal');
-          } else {
-              alert("Please fill out all fields correctly.");
-          }
-      }
-
-      function updateTransactionHistory() {
-          const historyDiv = document.getElementById('transaction-history');
-          historyDiv.innerHTML = transactionHistory.map(transaction =>
-              `<div class="transaction">
-                                  <span>${transaction.description}:</span> $${transaction.amount.toFixed(2)}
-                  <small>(${transaction.timestamp})</small>
-              </div>`
-          ).join('');
-      }
-
-      function updateBalance() {
-          document.getElementById('total-balance').innerText = totalBalance.toFixed(2);
-      }
-
-      const ctx = document.getElementById('budget-chart').getContext('2d');
-      let budgetChart;
-
-      function updateBudgetChart() {
-          const labels = Object.keys(spendingByCategory);
-          const data = Object.values(spendingByCategory);
-          const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
-
-          if (budgetChart) {
-              budgetChart.data.labels = labels;
-              budgetChart.data.datasets[0].data = data;
-              budgetChart.update();
-          } else {
-              budgetChart = new Chart(ctx, {
-                  type: 'doughnut',
-                  data: {
-                      labels: labels,
-                      datasets: [{
-                          data: data,
-                          backgroundColor: colors,
-                          borderWidth: 1,
-                      }]
-                  },
-                  options: {
-                      plugins: {
-                          tooltip: {
-                              callbacks: {
-                                  label: function (tooltipItem) {
-                                      const category = tooltipItem.label;
-                                      const value = tooltipItem.raw;
-                                      return `${category}: $${value.toFixed(2)}`;
-                                  }
-                              }
-                          },
-                          legend: { display: false }
-                      },
-                      cutout: '70%',
+    // ------------------------
+    // Budget Charts & Utilization
+    // ------------------------
+    // Donut Chart for Spending by Category
+    const ctx = document.getElementById('budget-chart') ? document.getElementById('budget-chart').getContext('2d') : null;
+    let budgetChart;
+    function updateBudgetChart() {
+      if (!ctx) return;
+      const labels = Object.keys(spendingByCategory);
+      const data = Object.values(spendingByCategory);
+      const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
+      if(budgetChart) {
+        budgetChart.data.labels = labels;
+        budgetChart.data.datasets[0].data = data;
+        budgetChart.update();
+      } else {
+        budgetChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: colors,
+              borderWidth: 1,
+            }]
+          },
+          options: {
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(tooltipItem) {
+                    const category = tooltipItem.label;
+                    const value = tooltipItem.raw;
+                    return `${category}: $${value.toFixed(2)}`;
                   }
-              });
+                }
+              },
+              legend: { display: false }
+            },
+            cutout: '70%',
           }
-
-          const keyDiv = document.getElementById('chart-key');
-          keyDiv.innerHTML = labels.map((label, index) =>
-              `<span style="background-color: ${colors[index]}; padding: 5px 10px; border-radius: 5px;">
-                  ${label}
-              </span>`
-          ).join('');
+        });
       }
+      const keyDiv = document.getElementById('chart-key');
+      keyDiv.innerHTML = labels.map((label, index) =>
+        `<span style="background-color: ${colors[index]};">${label}</span>`
+      ).join('');
+    }
+    // Update budget utilization based on monthlyBudget and total spent
+    function updateBudgetUtilization() {
+      const totalSpent = Object.values(spendingByCategory).reduce((sum, val) => sum + val, 0);
+      let utilization = (totalSpent / monthlyBudget) * 100;
+      if(utilization > 100) utilization = 100;
+      document.getElementById('budget-utilization').innerText = `${utilization.toFixed(2)}%`;
+    }
+    // Adaptive Weekly Bar Chart: compute spending from transaction history over last 6 weeks.
+    const weeklyCtx = document.getElementById('weekly-bar-chart') ? document.getElementById('weekly-bar-chart').getContext('2d') : null;
+    let weeklyChart;
+    function updateWeeklyBarChart() {
+      if(!weeklyCtx) return;
+      const now = new Date();
+      let computedSpending = Array(6).fill(0);
+      transactionHistory.forEach(tx => {
+        if(tx.amount < 0) { // only expenses
+          let txDate = new Date(tx.timestamp);
+          let diffDays = (now - txDate) / (1000 * 60 * 60 * 24);
+          // Assign week index: current week (0-6 days ago) will be at index 5, previous week at index 4, etc.
+          let weekIndex = 5 - Math.floor(diffDays / 7);
+          if(weekIndex >= 0 && weekIndex < 6) {
+            computedSpending[weekIndex] += Math.abs(tx.amount);
+          }
+        }
+      });
+      const weekLabels = ["6 Weeks Ago", "5 Weeks Ago", "4 Weeks Ago", "3 Weeks Ago", "2 Weeks Ago", "This Week"];
+      if(weeklyChart) {
+        weeklyChart.data.labels = weekLabels;
+        weeklyChart.data.datasets[0].data = computedSpending;
+        weeklyChart.update();
+      } else {
+        weeklyChart = new Chart(weeklyCtx, {
+          type: 'bar',
+          data: {
+            labels: weekLabels,
+            datasets: [{
+              label: 'Weekly Spending',
+              data: computedSpending,
+              backgroundColor: '#36A2EB'
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+    }
+    // Allow user to update monthly budget via modal
+    function setMonthlyBudget() {
+      const newBudget = parseFloat(document.getElementById('goal-amount').value);
+      if(!isNaN(newBudget) && newBudget > 0) {
+        monthlyBudget = newBudget;
+        updateBudgetUtilization();
+        closeModal('goal-modal');
+      } else {
+        alert("Please enter a valid monthly budget.");
+      }
+    }
+
+    // ------------------------
+    // Settings Functions
+    // ------------------------
+    function changeUsername() {
+      const newUsername = document.getElementById("new-username").value;
+      if(newUsername) {
+        alert("Username changed successfully!");
+      } else {
+        alert("Please enter a valid username.");
+      }
+    }
+    function changePassword() {
+      const newPassword = document.getElementById("new-password").value;
+      if(newPassword) {
+        alert("Password changed successfully!");
+      } else {
+        alert("Please enter a valid password.");
+      }
+    }
+    function toggleTheme() {
+      // Simple theme toggle: swap background and text colors
+      const bodyStyles = getComputedStyle(document.body);
+      if(bodyStyles.backgroundColor === "rgb(245, 247, 250)") { // #f5f7fa
+        document.body.style.backgroundColor = "#333";
+        document.body.style.color = "#fff";
+      } else {
+        document.body.style.backgroundColor = "#f5f7fa";
+        document.body.style.color = "#333";
+      }
+    }
   </script>
   </body>
 </html>
